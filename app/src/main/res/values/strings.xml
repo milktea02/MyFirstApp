@@ -1,5 +1,3 @@
 <resources>
-    <string name="app_name">Sample Calculator App</string>
-    <string name="edit_message">Enter a message</string>
-    <string name="button_send">Send</string>
+    <string name="app_name">YGO Calc</string>
 </resources>
