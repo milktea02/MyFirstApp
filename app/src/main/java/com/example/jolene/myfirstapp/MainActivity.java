@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 computeCalculation();
                 CURRENT_ACTION = ADDITION;
-                binding.editText.setText(binding.editText.getText() + "+");
+                binding.infoTextView.setText(decimalFormat.format(valueOne) + "+");
                 binding.editText.setText(null);
             }
         });
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 computeCalculation();
                 CURRENT_ACTION = SUBSTRACTION;
-                binding.editText.setText(binding.editText.getText() + "-");
+                binding.infoTextView.setText(decimalFormat.format(valueOne) + "-");
                 binding.editText.setText(null);
             }
         });
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 computeCalculation();
                 CURRENT_ACTION = MULTIPLICATION;
-                binding.editText.setText(binding.editText.getText() + "*");
+                binding.infoTextView.setText(decimalFormat.format(valueOne) + "*");
                 binding.editText.setText(null);
             }
         });
@@ -70,8 +70,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 computeCalculation();
                 CURRENT_ACTION = DIVISION;
-                binding.editText.setText(binding.editText.getText() + "/");
+                binding.infoTextView.setText(decimalFormat.format(valueOne) + "/");
                 binding.editText.setText(null);
+            }
+        });
+
+        binding.buttonEqual.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                computeCalculation();
+                binding.infoTextView.setText(binding.infoTextView.getText().toString() +
+                        decimalFormat.format(valueTwo) + " = " + decimalFormat.format(valueOne));
+                valueOne = Double.NaN;
+                CURRENT_ACTION = '0';
             }
         });
 
