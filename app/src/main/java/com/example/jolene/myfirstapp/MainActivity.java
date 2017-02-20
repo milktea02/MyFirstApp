@@ -1,28 +1,65 @@
 package com.example.jolene.myfirstapp;
 
-import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
+
+import java.text.DecimalFormat;
+
+import com.example.jolene.myfirstapp.databinding.ActivityMainBinding;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static String EXTRA_MESSAGE = "com.example.jolene.myfirstapp.MESSAGE";
+    private ActivityMainBinding binding;
+
+    private double valueOne = Double.NaN;
+    private double valueTwo;
+
+    private static final char ADDITION = '+';
+    private static final char SUBSTRACTION = '-';
+    private static final char MULTIPLICATION = '*';
+    private static final char DIVISION = '/';
+
+    private char CURRENT_ACTION;
+
+    private DecimalFormat decimalFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        decimalFormat = new DecimalFormat("#.##########");
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        binding.buttonDot.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + ".");
+            }
+        });
+
+        binding.buttonZero.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "0");
+            }
+        });
+
+        binding.buttonOne.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "1");
+            }
+        });
+
+        binding.buttonTwo.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "2");
+            }
+        });
     }
 
-    /*called when someone clicks the send message button */
-    public void sendMessage(View view) {
-        // TODO: Implement
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
+
 }
