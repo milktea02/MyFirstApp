@@ -135,6 +135,9 @@
             android:layout_toRightOf="@id/buttonDot"
             android:text="0"
             android:textSize="20sp"/>
+
+        <!-- Symbols -->
+
         <Button
             android:id="@+id/buttonEqual"
             style="@style/Widget.AppCompat.Button.Borderless"
