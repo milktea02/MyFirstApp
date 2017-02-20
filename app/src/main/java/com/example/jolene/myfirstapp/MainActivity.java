@@ -32,13 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
     private int CURRENT_PLAYER = 1;
 
-    private DecimalFormat decimalFormat;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        decimalFormat = new DecimalFormat("#.##########");
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         playerOnepoints = Integer.parseInt(binding.playerOnePoints.getText().toString());
         playerTwoPoints = Integer.parseInt(binding.playerTwoPoints.getText().toString());
@@ -231,6 +228,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    /** Need to refactor this badly */
 
     private void computeCalculation() {
         if(!Double.isNaN(valueOne)) {
