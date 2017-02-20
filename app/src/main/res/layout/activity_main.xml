@@ -23,10 +23,17 @@
         <!-- LP for P1 and P2 -->
 
         <TextView
+            android:id="@+id/playerOneLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/centerShim"
+            android:text="Player One"/>
+        <TextView
             android:id="@+id/playerOnePoints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
+            android:layout_below="@id/playerOneLabel"
             android:layout_toLeftOf="@+id/centerShim"
             android:text = "8000"
             android:textSize="30sp"
@@ -34,10 +41,17 @@
             android:background="@drawable/blackselector_p1"/>
 
         <TextView
+            android:id="@+id/playerTwoLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/centerShim"
+            android:text="Player Two"/>
+        <TextView
             android:id="@+id/playerTwoPoints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
+            android:layout_below="@id/playerTwoLabel"
             android:layout_toRightOf="@id/centerShim"
             android:text = "8000"
             android:textSize="30sp"

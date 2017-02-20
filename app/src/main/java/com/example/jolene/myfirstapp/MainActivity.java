@@ -17,8 +17,11 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
-    private double valueOne = Double.NaN;
-    private double valueTwo;
+    private int valueOne = 0;
+    private int valueTwo;
+
+    private int playerTwoPoints;
+    private int playerOnepoints;
 
     private static final char ADDITION = '+';
     private static final char SUBSTRACTION = '-';
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         decimalFormat = new DecimalFormat("#.##########");
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        playerOnepoints = Integer.parseInt(binding.playerOnePoints.getText().toString());
+        playerTwoPoints = Integer.parseInt(binding.playerTwoPoints.getText().toString());
+
 
 
 
@@ -45,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonAdd.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                computeCalculation();
                 CURRENT_ACTION = ADDITION;
-                binding.playerOnePoints.setText(decimalFormat.format(valueOne) + "+");
+                computeCalculation();
+                //binding.playerOnePoints.setText(decimalFormat.format(valueOne) + "+");
                 binding.editText.setText(null);
             }
         });
@@ -55,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonSubtract.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                computeCalculation();
                 CURRENT_ACTION = SUBSTRACTION;
-                binding.playerOnePoints.setText(decimalFormat.format(valueOne) + "-");
+                computeCalculation();
+                //binding.playerOnePoints.setText(decimalFormat.format(valueOne) + "-");
                 binding.editText.setText(null);
             }
         });
@@ -112,6 +118,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 binding.editText.setText(binding.editText.getText() + "0");
+            }
+        });
+
+        binding.buttonDoubleZero.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "00");
+            }
+        });
+
+        binding.buttonTripleZero.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "000");
             }
         });
 
@@ -179,9 +199,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /**
-         * Clears screen one char at a time
+         * Clears editText one char at a time
          *
-         * If there is only 1 char then it resets everything
+         * If there is only 1 char then it resets everything in editText
          */
         binding.buttonClear.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -190,30 +210,57 @@ public class MainActivity extends AppCompatActivity {
                     CharSequence currentText = binding.editText.getText();
                     binding.editText.setText(currentText.subSequence(0, currentText.length()-1));
                 } else {
-                    valueOne = Double.NaN;
-                    valueTwo = Double.NaN;
+                    valueOne = 0;
+                    valueTwo = 0;
                     binding.editText.setText("");
-                    binding.playerOnePoints.setText("");
+                    //binding.playerOnePoints.setText("");
                 }
+            }
+        });
+
+        binding.buttonReset.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText("");
+                binding.playerOnePoints.setText("8000");
+                binding.playerTwoPoints.setText("8000");
+                playerOnepoints = 8000;
+                playerTwoPoints = 8000;
+                valueOne = 0;
+                valueTwo = 0;
             }
         });
     }
 
     private void computeCalculation() {
         if(!Double.isNaN(valueOne)) {
-            valueTwo = Double.parseDouble(binding.editText.getText().toString());
+            valueTwo = Integer.parseInt(binding.editText.getText().toString());
             binding.editText.setText(null);
 
-            if(CURRENT_ACTION == ADDITION)
-                valueOne = this.valueOne + valueTwo;
-            else if(CURRENT_ACTION == SUBSTRACTION)
-                valueOne = this.valueOne - valueTwo;
-        } else {
-            try {
-                valueOne = Double.parseDouble(binding.editText.getText().toString());
-            } catch (Exception e) {
+            if (CURRENT_ACTION == ADDITION) {
+                if (CURRENT_PLAYER == 1) {
+                    playerOnepoints += valueTwo;
+                    binding.playerOnePoints.setText(Integer.toString(playerOnepoints));
+                } else {
+                    playerTwoPoints += valueTwo;
+                    binding.playerTwoPoints.setText(Integer.toString(playerTwoPoints));
+                }
+            } else if (CURRENT_ACTION == SUBSTRACTION) {
+                if (CURRENT_PLAYER == 1) {
+                    playerOnepoints -= valueTwo;
+                    binding.playerOnePoints.setText(Integer.toString(playerOnepoints));
+                } else {
+                    playerTwoPoints -= valueTwo;
+                    binding.playerTwoPoints.setText(Integer.toString(playerTwoPoints));
+                }
+            } else {
+                try {
+                    valueOne = Integer.parseInt(binding.editText.getText().toString());
+                } catch (Exception e) {
 
+                }
             }
+
         }
     }
 
