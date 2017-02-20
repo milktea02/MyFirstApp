@@ -11,18 +11,42 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context="com.example.jolene.myfirstapp.MainActivity">
 
+        <!-- Hacky Center Alignment thing I found on StackOverFlow-->
+
+        <View
+            android:id="@+id/centerShim"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true"/>
+
+        <!-- LP for P1 and P2 -->
+
         <TextView
-            android:id="@+id/infoTextView"
+            android:id="@+id/playerOnePoints"
+            android:background="#FFFF00"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
+            android:layout_toLeftOf="@+id/centerShim"
+            android:text = "8000"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/playerTwoPoints"
+            android:background="#00FFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_toRightOf="@id/centerShim"
+            android:text = "8000"
             android:textSize="30sp" />
 
         <EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/infoTextView"
+            android:layout_below="@id/playerOnePoints"
             android:enabled="false"
             android:gravity="bottom"
             android:lines="2"
@@ -31,9 +55,10 @@
 
         <!--
         Buttons
-        7 8 9
-        4 5 6
-        1 2 3
+        7 8 9  -
+        4 5 6  +
+        1 2 3  R
+        zeros
         -->
         <Button
             android:id="@+id/buttonSeven"
@@ -117,27 +142,38 @@
             android:text="3"
             android:textSize="20sp"/>
 
+        <Button
+        android:id="@+id/buttonTripleZero"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonOne"
+        android:text="000"
+        android:textSize="20sp"/>
 
         <Button
-            android:id="@+id/buttonDot"
+            android:id="@+id/buttonDoubleZero"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/buttonOne"
-            android:text="."
+            android:layout_below="@id/buttonTwo"
+            android:layout_toRightOf="@id/buttonTripleZero"
+            android:text="00"
             android:textSize="20sp"/>
+
         <Button
             android:id="@+id/buttonZero"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/buttonTwo"
-            android:layout_toRightOf="@id/buttonDot"
+            android:layout_below="@id/buttonThree"
+            android:layout_toRightOf="@id/buttonDoubleZero"
             android:text="0"
             android:textSize="20sp"/>
 
         <!-- Symbols -->
 
+        <!-- YuGiOh doesn't need these to Calc Life Points
         <Button
             android:id="@+id/buttonEqual"
             style="@style/Widget.AppCompat.Button.Borderless"
@@ -148,6 +184,14 @@
             android:text="="
             android:textSize="20sp"/>
 
+        <Button
+            android:id="@+id/buttonDot"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonOne"
+            android:text="."
+            android:textSize="20sp"/>
 
         <Button
             android:id="@+id/buttonDivide"
@@ -169,35 +213,37 @@
             android:text="*"
             android:textSize="20sp" />
 
+            -->
+
         <Button
             android:id="@+id/buttonSubtract"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            android:theme="@style/Button.Subtract"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/buttonThree"
-            android:layout_toRightOf="@id/buttonThree"
+            android:layout_alignTop="@id/buttonNine"
+            android:layout_toRightOf="@id/buttonNine"
             android:text="-"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/buttonAdd"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            android:theme="@style/Button.Add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/buttonEqual"
-            android:layout_toRightOf="@id/buttonEqual"
+            android:layout_alignTop="@id/buttonSix"
+            android:layout_toRightOf="@id/buttonSix"
             android:text="+"
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/buttonClear"
+            android:id="@+id/buttonReset"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/buttonAdd"
             android:layout_below="@id/buttonAdd"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="C"
+            android:text="RESET"
             android:textSize="20sp" />
 
     </RelativeLayout>

@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Button.Subtract" parent="Button">
+        <item name ="colorButtonNormal">@color/colorSubtract</item>
+    </style>
+
+    <style name="Button.Add" parent="Button">
+        <item name ="colorButtonNormal">@color/colorAdd</item>
+    </style>
+
 </resources>
