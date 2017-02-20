@@ -3,7 +3,10 @@ package com.example.jolene.myfirstapp;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -24,13 +27,17 @@ public class MainActivity extends AppCompatActivity {
 
     private char CURRENT_ACTION;
 
+    private int CURRENT_PLAYER = 1;
+
     private DecimalFormat decimalFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         decimalFormat = new DecimalFormat("#.##########");
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
 
 
         // Symbols
@@ -40,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 computeCalculation();
                 CURRENT_ACTION = ADDITION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "+");
+                binding.playerOnePoints.setText(decimalFormat.format(valueOne) + "+");
                 binding.editText.setText(null);
             }
         });
@@ -50,11 +57,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 computeCalculation();
                 CURRENT_ACTION = SUBSTRACTION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "-");
+                binding.playerOnePoints.setText(decimalFormat.format(valueOne) + "-");
                 binding.editText.setText(null);
             }
         });
 
+        /**
         binding.buttonMultiply.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -75,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         binding.buttonEqual.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -85,14 +95,18 @@ public class MainActivity extends AppCompatActivity {
                 CURRENT_ACTION = '0';
             }
         });
+         */
 
         // Numbers
+
+        /*
         binding.buttonDot.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 binding.editText.setText(binding.editText.getText() + ".");
             }
         });
+        */
 
         binding.buttonZero.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -179,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                     valueOne = Double.NaN;
                     valueTwo = Double.NaN;
                     binding.editText.setText("");
-                    binding.infoTextView.setText("");
+                    binding.playerOnePoints.setText("");
                 }
             }
         });
@@ -194,10 +208,6 @@ public class MainActivity extends AppCompatActivity {
                 valueOne = this.valueOne + valueTwo;
             else if(CURRENT_ACTION == SUBSTRACTION)
                 valueOne = this.valueOne - valueTwo;
-            else if(CURRENT_ACTION == MULTIPLICATION)
-                valueOne = this.valueOne * valueTwo;
-            else if(CURRENT_ACTION == DIVISION)
-                valueOne = this.valueOne / valueTwo;
         } else {
             try {
                 valueOne = Double.parseDouble(binding.editText.getText().toString());
@@ -205,6 +215,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    public void setPlayerOne(View v) {
+        this.CURRENT_PLAYER = 1;
+        Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
+    }
+
+    public void setPlayerTwo(View v) {
+        this.CURRENT_PLAYER = 2;
+        Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
     }
 
 

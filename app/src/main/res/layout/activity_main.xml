@@ -24,23 +24,25 @@
 
         <TextView
             android:id="@+id/playerOnePoints"
-            android:background="#FFFF00"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:layout_toLeftOf="@+id/centerShim"
             android:text = "8000"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:onClick="setPlayerOne"
+            android:background="@drawable/blackselector_p1"/>
 
         <TextView
             android:id="@+id/playerTwoPoints"
-            android:background="#00FFFF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:layout_toRightOf="@id/centerShim"
             android:text = "8000"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:onClick="setPlayerTwo"
+            android:background="@drawable/blackselector_p2"/>
 
         <EditText
             android:id="@+id/editText"
@@ -236,13 +238,24 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/buttonReset"
+            android:id="@+id/buttonClear"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/buttonAdd"
             android:layout_below="@id/buttonAdd"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_toRightOf="@id/buttonThree"
+            android:text="C"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/buttonReset"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/buttonAdd"
+            android:layout_below="@id/buttonClear"
+            android:layout_toRightOf="@id/buttonZero"
             android:text="RESET"
             android:textSize="20sp" />
 
