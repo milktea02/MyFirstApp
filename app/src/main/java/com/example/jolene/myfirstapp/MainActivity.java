@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private int CURRENT_PLAYER = 1;
 
     private SoundPool soundPool;
-    private int soundID;
+    private int hurtID;
+    private int gainID;
     boolean plays = false, loaded = false;
     float actVolume, maxVolume, volume;
     AudioManager audioManager;
@@ -65,10 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 loaded = true;
             }
         });
-        soundID = soundPool.load(this, R.raw.timgormlyeightbithurt, 1);
-
-
-
+        hurtID = soundPool.load(this, R.raw.timgormlyeightbithurt, 1);
+        gainID = soundPool.load(this, R.raw.hydranosbeep, 1);
 
         // Symbols
 
@@ -216,12 +215,12 @@ public class MainActivity extends AppCompatActivity {
     /** Need to refactor this badly */
 
     private void computeCalculation() {
-        if(!Double.isNaN(valueOne)) {
+        if(!binding.editText.getText().toString().equals("")) {
             valueTwo = Integer.parseInt(binding.editText.getText().toString());
             binding.editText.setText(null);
-            playBeep();
 
             if (CURRENT_ACTION == ADDITION) {
+                playSound(gainID);
                 if (CURRENT_PLAYER == 1) {
                     playerOnepoints += valueTwo;
                     binding.playerOnePoints.setText(Integer.toString(playerOnepoints));
@@ -230,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
                     binding.playerTwoPoints.setText(Integer.toString(playerTwoPoints));
                 }
             } else if (CURRENT_ACTION == SUBSTRACTION) {
+                playSound(hurtID);
                 if (CURRENT_PLAYER == 1) {
                     playerOnepoints -= valueTwo;
                     binding.playerOnePoints.setText(Integer.toString(playerOnepoints));
@@ -241,14 +241,13 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     valueOne = Integer.parseInt(binding.editText.getText().toString());
                 } catch (Exception e) {
-
                 }
             }
-
         }
     }
 
-    public void setPlayerOne(View v) {
+    public void setPlayer(View v) {
+        this.CURRENT_PLAYER = Integer.parseInt(v.getTag().toString());
         this.CURRENT_PLAYER = 1;
         Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
     }
@@ -258,21 +257,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
     }
 
-    public void playSound(View v) {
-        // Is the sound loaded does it already play?
-        if (loaded && !plays) {
-            soundPool.play(soundID, volume, volume, 1, 0, 1f);
-            counter = counter++;
-            Toast.makeText(this, "Played sound", Toast.LENGTH_SHORT).show();
-            plays = true;
-        }
-    }
-
-    private void playBeep() {
+    private void playSound(int soundID) {
         soundPool.play(soundID, volume, volume, 1, 0, 1f);
         soundPool.stop(soundID);
-        Log.d("playBeep()", "Played the Beep");
+        Log.d("playBeep()", "Played the Beep with sound ID: " + soundID);
     }
-
 
 }
