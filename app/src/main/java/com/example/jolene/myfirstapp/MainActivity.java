@@ -1,12 +1,15 @@
 package com.example.jolene.myfirstapp;
 
 import android.databinding.DataBindingUtil;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
@@ -29,8 +32,14 @@ public class MainActivity extends AppCompatActivity {
     private static final char DIVISION = '/';
 
     private char CURRENT_ACTION;
-
     private int CURRENT_PLAYER = 1;
+
+    private SoundPool soundPool;
+    private int soundID;
+    boolean plays = false, loaded = false;
+    float actVolume, maxVolume, volume;
+    AudioManager audioManager;
+    int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,28 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         playerOnepoints = Integer.parseInt(binding.playerOnePoints.getText().toString());
         playerTwoPoints = Integer.parseInt(binding.playerTwoPoints.getText().toString());
+
+        // AudioManager Settings
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        actVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        volume = actVolume / maxVolume;
+
+        // Hard Buttons setting to adjust the media sound
+        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        // the Counter will help us recognize the stream id of the sound played now
+        counter = 0;
+
+        // Load the sounds
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                loaded = true;
+            }
+        });
+        soundID = soundPool.load(this, R.raw.timgormly8bithurt, 1);
 
 
 
@@ -65,51 +96,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /**
-        binding.buttonMultiply.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                computeCalculation();
-                CURRENT_ACTION = MULTIPLICATION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "*");
-                binding.editText.setText(null);
-            }
-        });
-
-        binding.buttonDivide.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                computeCalculation();
-                CURRENT_ACTION = DIVISION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "/");
-                binding.editText.setText(null);
-            }
-        });
-
-
-
-        binding.buttonEqual.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                computeCalculation();
-                binding.infoTextView.setText(binding.infoTextView.getText().toString() +
-                        decimalFormat.format(valueTwo) + " = " + decimalFormat.format(valueOne));
-                valueOne = Double.NaN;
-                CURRENT_ACTION = '0';
-            }
-        });
-         */
-
         // Numbers
-
-        /*
-        binding.buttonDot.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                binding.editText.setText(binding.editText.getText() + ".");
-            }
-        });
-        */
 
         binding.buttonZero.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -236,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
         if(!Double.isNaN(valueOne)) {
             valueTwo = Integer.parseInt(binding.editText.getText().toString());
             binding.editText.setText(null);
+            playBeep();
 
             if (CURRENT_ACTION == ADDITION) {
                 if (CURRENT_PLAYER == 1) {
@@ -272,6 +260,22 @@ public class MainActivity extends AppCompatActivity {
     public void setPlayerTwo(View v) {
         this.CURRENT_PLAYER = 2;
         Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
+    }
+
+    public void playSound(View v) {
+        // Is the sound loaded does it already play?
+        if (loaded && !plays) {
+            soundPool.play(soundID, volume, volume, 1, 0, 1f);
+            counter = counter++;
+            Toast.makeText(this, "Played sound", Toast.LENGTH_SHORT).show();
+            plays = true;
+        }
+    }
+
+    private void playBeep() {
+        soundPool.play(soundID, volume, volume, 1, 0, 1f);
+        soundPool.stop(soundID);
+        Log.d("playBeep()", "Played the Beep");
     }
 
 
