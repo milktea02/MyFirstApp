@@ -7,11 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.text.DecimalFormat;
 
 import com.example.jolene.myfirstapp.databinding.ActivityMainBinding;
 
@@ -69,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 loaded = true;
             }
         });
-        soundID = soundPool.load(this, R.raw.timgormly8bithurt, 1);
+        soundID = soundPool.load(this, R.raw.timgormlyeightbithurt, 1);
 
 
 
