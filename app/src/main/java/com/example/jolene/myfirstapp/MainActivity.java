@@ -248,12 +248,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setPlayer(View v) {
         this.CURRENT_PLAYER = Integer.parseInt(v.getTag().toString());
-        this.CURRENT_PLAYER = 1;
-        Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
-    }
-
-    public void setPlayerTwo(View v) {
-        this.CURRENT_PLAYER = 2;
         Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
     }
 
