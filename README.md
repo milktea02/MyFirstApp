@@ -8,8 +8,9 @@ TODO:
 - [ ] Show which player is highlighted/selected
 - [ ] Game State Checking (did a player die?)
 - [ ] Allow users to enter own name
-- [ ] Sound effects (maybe)
+- [ ] Sound effects
 - [ ] Fancy countdown effect
+- [ ] Prevent auto-rotation
 
 Sources:
 - http://www.androidauthority.com/build-a-calculator-app-721910/

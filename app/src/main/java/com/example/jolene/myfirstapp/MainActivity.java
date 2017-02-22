@@ -1,22 +1,27 @@
 package com.example.jolene.myfirstapp;
 
 import android.databinding.DataBindingUtil;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.app.ProgressDialog;
 
 import com.example.jolene.myfirstapp.databinding.ActivityMainBinding;
+
+import static java.lang.Math.round;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
-    private int valueOne = 0;
     private int valueTwo;
 
     private int playerTwoPoints;
@@ -24,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final char ADDITION = '+';
     private static final char SUBSTRACTION = '-';
-    private static final char MULTIPLICATION = '*';
-    private static final char DIVISION = '/';
+    private static final char HALF = '2';
 
     private char CURRENT_ACTION;
     private int CURRENT_PLAYER = 1;
@@ -46,28 +50,27 @@ public class MainActivity extends AppCompatActivity {
         playerOnepoints = Integer.parseInt(binding.playerOnePoints.getText().toString());
         playerTwoPoints = Integer.parseInt(binding.playerTwoPoints.getText().toString());
 
-        // AudioManager Settings
-        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        actVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        volume = actVolume / maxVolume;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        // Hard Buttons setting to adjust the media sound
-        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            AudioAttributes audioAttrib = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            soundPool = new SoundPool.Builder().setAudioAttributes(audioAttrib).setMaxStreams(6).build();
+        }
+        else {
 
-        // the Counter will help us recognize the stream id of the sound played now
-        counter = 0;
+            soundPool = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
+        }
 
-        // Load the sounds
-        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
         soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                 loaded = true;
             }
         });
-        hurtID = soundPool.load(this, R.raw.timgormlyeightbithurt, 1);
-        gainID = soundPool.load(this, R.raw.hydranosbeep, 1);
+        hurtID = soundPool.load(MainActivity.this, R.raw.timgormlyeightbithurt, 1);
+        gainID = soundPool.load(MainActivity.this, R.raw.hydranosbeep, 1);
 
         // Symbols
 
@@ -76,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 CURRENT_ACTION = ADDITION;
                 computeCalculation();
-                //binding.playerOnePoints.setText(decimalFormat.format(valueOne) + "+");
                 binding.editText.setText(null);
             }
         });
@@ -86,7 +88,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 CURRENT_ACTION = SUBSTRACTION;
                 computeCalculation();
-                //binding.playerOnePoints.setText(decimalFormat.format(valueOne) + "-");
+                binding.editText.setText(null);
+            }
+        });
+
+        binding.buttonHalf.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                CURRENT_ACTION = HALF;
+                computeCalculation();
                 binding.editText.setText(null);
             }
         });
@@ -189,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                     CharSequence currentText = binding.editText.getText();
                     binding.editText.setText(currentText.subSequence(0, currentText.length()-1));
                 } else {
-                    valueOne = 0;
+                    //valueOne = 0;
                     valueTwo = 0;
                     binding.editText.setText("");
                     //binding.playerOnePoints.setText("");
@@ -205,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
                 binding.playerTwoPoints.setText("8000");
                 playerOnepoints = 8000;
                 playerTwoPoints = 8000;
-                valueOne = 0;
                 valueTwo = 0;
             }
         });
@@ -237,11 +246,14 @@ public class MainActivity extends AppCompatActivity {
                     playerTwoPoints -= valueTwo;
                     binding.playerTwoPoints.setText(Integer.toString(playerTwoPoints));
                 }
+            }
+        } else if (CURRENT_ACTION == HALF) {
+            if (CURRENT_PLAYER == 1) {
+                playerOnepoints = round((playerOnepoints/2));
+                binding.playerOnePoints.setText(Integer.toString(playerOnepoints));
             } else {
-                try {
-                    valueOne = Integer.parseInt(binding.editText.getText().toString());
-                } catch (Exception e) {
-                }
+                playerTwoPoints = round((playerTwoPoints/2));
+                binding.playerTwoPoints.setText(Integer.toString(playerTwoPoints));
             }
         }
     }
@@ -252,8 +264,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void playSound(int soundID) {
-        soundPool.play(soundID, volume, volume, 1, 0, 1f);
-        soundPool.stop(soundID);
+        soundPool.play(soundID, 1, 1, 1, 0, 1f);
         Log.d("playBeep()", "Played the Beep with sound ID: " + soundID);
     }
 
