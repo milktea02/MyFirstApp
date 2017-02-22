@@ -1,17 +1,15 @@
 package com.example.jolene.myfirstapp;
 
+import android.annotation.TargetApi;
 import android.databinding.DataBindingUtil;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.app.ProgressDialog;
 
 import com.example.jolene.myfirstapp.databinding.ActivityMainBinding;
 
@@ -26,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
     private int playerTwoPoints;
     private int playerOnepoints;
+    private boolean playerOneSelect = true;
+    private boolean playerTwoSelect = false;
+
 
     private static final char ADDITION = '+';
     private static final char SUBSTRACTION = '-';
@@ -38,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private int hurtID;
     private int gainID;
     boolean plays = false, loaded = false;
-    float actVolume, maxVolume, volume;
-    AudioManager audioManager;
-    int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -260,6 +258,27 @@ public class MainActivity extends AppCompatActivity {
 
     public void setPlayer(View v) {
         this.CURRENT_PLAYER = Integer.parseInt(v.getTag().toString());
+        if (this.CURRENT_PLAYER == 1) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                binding.playerOnePoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.is_select));
+                binding.playerTwoPoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.not_select));
+            } else {
+                binding.playerOnePoints.setBackground(getResources().getDrawable(R.drawable.is_select));
+                binding.playerTwoPoints.setBackground(getResources().getDrawable(R.drawable.not_select));
+            }
+            playerOneSelect = true;
+            playerTwoSelect = false;
+        } else {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                binding.playerTwoPoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.is_select));
+                binding.playerOnePoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.not_select));
+            } else {
+                binding.playerTwoPoints.setBackground(getResources().getDrawable(R.drawable.is_select));
+                binding.playerOnePoints.setBackground(getResources().getDrawable(R.drawable.not_select));
+            }
+            playerOneSelect = false;
+            playerTwoSelect = true;
+        }
         Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
     }
 
