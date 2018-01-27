@@ -1,46 +1,82 @@
 package com.example.jolene.myfirstapp;
 
+import android.annotation.TargetApi;
 import android.databinding.DataBindingUtil;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
-import java.text.DecimalFormat;
-
 import com.example.jolene.myfirstapp.databinding.ActivityMainBinding;
+
+import static java.lang.Math.round;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
-    private double valueOne = Double.NaN;
-    private double valueTwo;
+    private int valueTwo;
+
+    private int playerTwoPoints;
+    private int playerOnepoints;
+    private boolean playerOneSelect = true;
+    private boolean playerTwoSelect = false;
+
 
     private static final char ADDITION = '+';
     private static final char SUBSTRACTION = '-';
-    private static final char MULTIPLICATION = '*';
-    private static final char DIVISION = '/';
+    private static final char HALF = '2';
 
     private char CURRENT_ACTION;
+    private int CURRENT_PLAYER = 1;
 
-    private DecimalFormat decimalFormat;
+    private SoundPool soundPool;
+    private int hurtID;
+    private int gainID;
+    boolean plays = false, loaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        decimalFormat = new DecimalFormat("#.##########");
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        playerOnepoints = Integer.parseInt(binding.playerOnePoints.getText().toString());
+        playerTwoPoints = Integer.parseInt(binding.playerTwoPoints.getText().toString());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            AudioAttributes audioAttrib = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            soundPool = new SoundPool.Builder().setAudioAttributes(audioAttrib).setMaxStreams(6).build();
+        }
+        else {
+
+            soundPool = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
+        }
+
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                loaded = true;
+            }
+        });
+        hurtID = soundPool.load(MainActivity.this, R.raw.timgormlyeightbithurt, 1);
+        gainID = soundPool.load(MainActivity.this, R.raw.hydranosbeep, 1);
 
         // Symbols
 
         binding.buttonAdd.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                computeCalculation();
                 CURRENT_ACTION = ADDITION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "+");
+                computeCalculation();
                 binding.editText.setText(null);
             }
         });
@@ -48,56 +84,41 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonSubtract.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                computeCalculation();
                 CURRENT_ACTION = SUBSTRACTION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "-");
+                computeCalculation();
                 binding.editText.setText(null);
             }
         });
 
-        binding.buttonMultiply.setOnClickListener(new View.OnClickListener(){
+        binding.buttonHalf.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                CURRENT_ACTION = HALF;
                 computeCalculation();
-                CURRENT_ACTION = MULTIPLICATION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "*");
                 binding.editText.setText(null);
-            }
-        });
-
-        binding.buttonDivide.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                computeCalculation();
-                CURRENT_ACTION = DIVISION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "/");
-                binding.editText.setText(null);
-            }
-        });
-
-        binding.buttonEqual.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                computeCalculation();
-                binding.infoTextView.setText(binding.infoTextView.getText().toString() +
-                        decimalFormat.format(valueTwo) + " = " + decimalFormat.format(valueOne));
-                valueOne = Double.NaN;
-                CURRENT_ACTION = '0';
             }
         });
 
         // Numbers
-        binding.buttonDot.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                binding.editText.setText(binding.editText.getText() + ".");
-            }
-        });
 
         binding.buttonZero.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 binding.editText.setText(binding.editText.getText() + "0");
+            }
+        });
+
+        binding.buttonDoubleZero.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "00");
+            }
+        });
+
+        binding.buttonTripleZero.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "000");
             }
         });
 
@@ -165,9 +186,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /**
-         * Clears screen one char at a time
+         * Clears editText one char at a time
          *
-         * If there is only 1 char then it resets everything
+         * If there is only 1 char then it resets everything in editText
          */
         binding.buttonClear.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -176,36 +197,94 @@ public class MainActivity extends AppCompatActivity {
                     CharSequence currentText = binding.editText.getText();
                     binding.editText.setText(currentText.subSequence(0, currentText.length()-1));
                 } else {
-                    valueOne = Double.NaN;
-                    valueTwo = Double.NaN;
+                    //valueOne = 0;
+                    valueTwo = 0;
                     binding.editText.setText("");
-                    binding.infoTextView.setText("");
+                    //binding.playerOnePoints.setText("");
                 }
+            }
+        });
+
+        binding.buttonReset.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText("");
+                binding.playerOnePoints.setText("8000");
+                binding.playerTwoPoints.setText("8000");
+                playerOnepoints = 8000;
+                playerTwoPoints = 8000;
+                valueTwo = 0;
             }
         });
     }
 
+
+    /** Need to refactor this badly */
+
     private void computeCalculation() {
-        if(!Double.isNaN(valueOne)) {
-            valueTwo = Double.parseDouble(binding.editText.getText().toString());
+        if(!binding.editText.getText().toString().equals("")) {
+            valueTwo = Integer.parseInt(binding.editText.getText().toString());
             binding.editText.setText(null);
 
-            if(CURRENT_ACTION == ADDITION)
-                valueOne = this.valueOne + valueTwo;
-            else if(CURRENT_ACTION == SUBSTRACTION)
-                valueOne = this.valueOne - valueTwo;
-            else if(CURRENT_ACTION == MULTIPLICATION)
-                valueOne = this.valueOne * valueTwo;
-            else if(CURRENT_ACTION == DIVISION)
-                valueOne = this.valueOne / valueTwo;
-        } else {
-            try {
-                valueOne = Double.parseDouble(binding.editText.getText().toString());
-            } catch (Exception e) {
-
+            if (CURRENT_ACTION == ADDITION) {
+                playSound(gainID);
+                if (CURRENT_PLAYER == 1) {
+                    playerOnepoints += valueTwo;
+                    binding.playerOnePoints.setText(Integer.toString(playerOnepoints));
+                } else {
+                    playerTwoPoints += valueTwo;
+                    binding.playerTwoPoints.setText(Integer.toString(playerTwoPoints));
+                }
+            } else if (CURRENT_ACTION == SUBSTRACTION) {
+                playSound(hurtID);
+                if (CURRENT_PLAYER == 1) {
+                    playerOnepoints -= valueTwo;
+                    binding.playerOnePoints.setText(Integer.toString(playerOnepoints));
+                } else {
+                    playerTwoPoints -= valueTwo;
+                    binding.playerTwoPoints.setText(Integer.toString(playerTwoPoints));
+                }
+            }
+        } else if (CURRENT_ACTION == HALF) {
+            if (CURRENT_PLAYER == 1) {
+                playerOnepoints = round((playerOnepoints/2));
+                binding.playerOnePoints.setText(Integer.toString(playerOnepoints));
+            } else {
+                playerTwoPoints = round((playerTwoPoints/2));
+                binding.playerTwoPoints.setText(Integer.toString(playerTwoPoints));
             }
         }
     }
 
+    public void setPlayer(View v) {
+        this.CURRENT_PLAYER = Integer.parseInt(v.getTag().toString());
+        if (this.CURRENT_PLAYER == 1) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                binding.playerOnePoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.is_select));
+                binding.playerTwoPoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.not_select));
+            } else {
+                binding.playerOnePoints.setBackground(getResources().getDrawable(R.drawable.is_select));
+                binding.playerTwoPoints.setBackground(getResources().getDrawable(R.drawable.not_select));
+            }
+            playerOneSelect = true;
+            playerTwoSelect = false;
+        } else {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                binding.playerTwoPoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.is_select));
+                binding.playerOnePoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.not_select));
+            } else {
+                binding.playerTwoPoints.setBackground(getResources().getDrawable(R.drawable.is_select));
+                binding.playerOnePoints.setBackground(getResources().getDrawable(R.drawable.not_select));
+            }
+            playerOneSelect = false;
+            playerTwoSelect = true;
+        }
+        Log.d("Current Player", Integer.toString(CURRENT_PLAYER));
+    }
+
+    private void playSound(int soundID) {
+        soundPool.play(soundID, 1, 1, 1, 0, 1f);
+        Log.d("playBeep()", "Played the Beep with sound ID: " + soundID);
+    }
 
 }

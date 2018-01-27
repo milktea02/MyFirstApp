@@ -9,38 +9,125 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
+        android:background="#EEEEEE"
         tools:context="com.example.jolene.myfirstapp.MainActivity">
 
+        <!-- Hacky Center Alignment thing I found on StackOverFlow-->
+
+        <View
+            android:id="@+id/centerShim"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true"/>
+
+        <!-- LP for P1 and P2 -->
+
         <TextView
-            android:id="@+id/infoTextView"
+            android:id="@+id/playerOneLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:textSize="30sp" />
+            android:layout_toLeftOf="@id/centerShim"
+            android:text="Player One"/>
+        <TextView
+            android:id="@+id/playerOnePoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_below="@id/playerOneLabel"
+            android:layout_toLeftOf="@+id/centerShim"
+            android:padding="3dp"
+            android:text = "8000"
+            android:textSize="30sp"
+            android:tag = "1"
+            android:onClick="setPlayer"
+            android:background="@drawable/player_selector"/>
+
+        <TextView
+            android:id="@+id/playerTwoLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/centerShim"
+            android:layout_marginLeft="5dp"
+            android:text="Player Two"/>
+        <TextView
+            android:id="@+id/playerTwoPoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@id/playerTwoLabel"
+            android:padding="3dp"
+            android:layout_toRightOf="@id/centerShim"
+            android:text = "8000"
+            android:textSize="30sp"
+            android:tag = "2"
+            android:onClick="setPlayer"
+            android:background="@drawable/player_selector"/>
+
+        <!-- Num -->
 
         <EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/infoTextView"
             android:enabled="false"
-            android:gravity="bottom"
-            android:lines="2"
-            android:maxLines="2"
-            android:textSize="20sp"/>
+            android:lines="1"
+            android:maxLines="1"
+            android:textSize="30sp"
+            android:padding="3dp"
+            android:background="@drawable/not_select"
+            android:selectAllOnFocus="false"
+            android:layout_below="@+id/playerTwoPoints"/>
 
         <!--
         Buttons
-        7 8 9
-        4 5 6
-        1 2 3
+        7 8 9  -
+        4 5 6  +
+        1 2 3  R
+        zeros
         -->
+
+        <!-- INCR and DECR Buttons -->
+
+        <Button
+            android:id="@+id/buttonSubtract"
+            android:theme="@style/Button.Subtract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editText"
+            android:text="-"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:theme="@style/Button.Add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/buttonSubtract"
+            android:layout_alignTop="@id/buttonSubtract"
+            android:text="+"
+            android:textSize="20sp"
+            />
+
+        <Button
+            android:id="@+id/buttonHalf"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/buttonAdd"
+            android:layout_alignTop="@id/buttonSubtract"
+            android:text="1/2"
+            android:textSize="20sp"
+            />
+
         <Button
             android:id="@+id/buttonSeven"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/editText"
+            android:layout_below="@id/buttonSubtract"
             android:text="7"
             android:textSize="20sp"/>
         <Button
@@ -48,7 +135,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/editText"
+            android:layout_below="@id/buttonAdd"
             android:layout_toRightOf="@id/buttonSeven"
             android:text="8"
             android:textSize="20sp"/>
@@ -57,7 +144,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/editText"
+            android:layout_below="@id/buttonHalf"
             android:layout_toRightOf="@id/buttonEight"
             android:text="9"
             android:textSize="20sp"/>
@@ -117,88 +204,66 @@
             android:text="3"
             android:textSize="20sp"/>
 
+        <Button
+        android:id="@+id/buttonTripleZero"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonOne"
+        android:text="000"
+        android:textSize="20sp"/>
 
         <Button
-            android:id="@+id/buttonDot"
+            android:id="@+id/buttonDoubleZero"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/buttonOne"
-            android:text="."
+            android:layout_below="@id/buttonTwo"
+            android:layout_toRightOf="@id/buttonTripleZero"
+            android:text="00"
             android:textSize="20sp"/>
+
         <Button
             android:id="@+id/buttonZero"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/buttonTwo"
-            android:layout_toRightOf="@id/buttonDot"
+            android:layout_below="@id/buttonThree"
+            android:layout_toRightOf="@id/buttonDoubleZero"
             android:text="0"
             android:textSize="20sp"/>
 
-        <!-- Symbols -->
-
-        <Button
-            android:id="@+id/buttonEqual"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/buttonThree"
-            android:layout_toRightOf="@id/buttonZero"
-            android:text="="
-            android:textSize="20sp"/>
-
-
-        <Button
-            android:id="@+id/buttonDivide"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/buttonNine"
-            android:layout_toRightOf="@id/buttonNine"
-            android:text="/"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/buttonMultiply"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/buttonSix"
-            android:layout_toRightOf="@id/buttonSix"
-            android:text="*"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/buttonSubtract"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/buttonThree"
-            android:layout_toRightOf="@id/buttonThree"
-            android:text="-"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/buttonAdd"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/buttonEqual"
-            android:layout_toRightOf="@id/buttonEqual"
-            android:text="+"
-            android:textSize="20sp" />
+        <!-- CLEAR and RESET -->
 
         <Button
             android:id="@+id/buttonClear"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/buttonAdd"
-            android:layout_below="@id/buttonAdd"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_below="@id/buttonTripleZero"
             android:text="C"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/buttonReset"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonZero"
+            android:layout_toRightOf="@id/buttonDoubleZero"
+            android:text="RESET"
+            android:textSize="20sp" />
+
+        <!-- yooooooo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonDoubleZero"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:text="milktea02 Was Here"/>
+
+
 
     </RelativeLayout>
 </layout>

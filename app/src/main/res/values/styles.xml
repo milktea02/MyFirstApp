@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Button.Subtract" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name ="colorButtonNormal">@color/colorSubtract</item>
+    </style>
+
+    <style name="Button.Add" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name ="colorButtonNormal">@color/colorAdd</item>
+    </style>
+
 </resources>
